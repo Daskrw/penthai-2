@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useSearchParams } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -13,9 +14,13 @@ interface Product {
   price: number;
   image_url: string;
   category: string;
+  product_type: 'consumer' | 'consumable';
 }
 
 const Shop = () => {
+  const [searchParams] = useSearchParams();
+  const productType = searchParams.get('type') as 'consumer' | 'consumable' | null;
+  
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -29,15 +34,22 @@ const Shop = () => {
 
   useEffect(() => {
     filterProducts();
-  }, [products, selectedCategories, priceRange]);
+  }, [products, selectedCategories, priceRange, productType]);
 
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });
+
+      // Filter by product type if specified
+      if (productType) {
+        query = query.eq("product_type", productType);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
 
@@ -75,12 +87,18 @@ const Shop = () => {
     );
   };
 
+  const getPageTitle = () => {
+    if (productType === 'consumer') return 'สินค้าอุปโภค (ของใช้)';
+    if (productType === 'consumable') return 'สินค้าบริโภค (ของกิน)';
+    return 'Shop';
+  };
+
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-background py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-foreground mb-8">Shop</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-8">{getPageTitle()}</h1>
           
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar Filters */}

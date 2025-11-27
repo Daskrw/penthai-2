@@ -86,6 +86,7 @@ export type Database = {
           image_url: string | null
           name: string
           price: number
+          product_type: Database["public"]["Enums"]["product_type"]
           stock: number
           updated_at: string
         }
@@ -97,6 +98,7 @@ export type Database = {
           image_url?: string | null
           name: string
           price: number
+          product_type?: Database["public"]["Enums"]["product_type"]
           stock?: number
           updated_at?: string
         }
@@ -108,6 +110,7 @@ export type Database = {
           image_url?: string | null
           name?: string
           price?: number
+          product_type?: Database["public"]["Enums"]["product_type"]
           stock?: number
           updated_at?: string
         }
@@ -176,6 +179,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      product_type: "consumer" | "consumable"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -304,6 +308,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      product_type: ["consumer", "consumable"],
     },
   },
 } as const
