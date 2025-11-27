@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   id: string;
@@ -10,11 +11,14 @@ interface ProductCardProps {
   image: string;
   rating: number;
   reviews: number;
+  stock?: number;
 }
 
-const ProductCard = ({ id, name, price, image, rating, reviews }: ProductCardProps) => {
+const ProductCard = ({ id, name, price, image, rating, reviews, stock = 0 }: ProductCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { addToCart } = useCart();
+  
+  const isOutOfStock = stock <= 0;
 
   return (
     <div className="group bg-card rounded-lg overflow-hidden shadow-md hover:shadow-thai-lg transition-all duration-300 hover-lift">
@@ -23,8 +27,17 @@ const ProductCard = ({ id, name, price, image, rating, reviews }: ProductCardPro
         <img
           src={image}
           alt={name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className={`w-full h-full object-cover transition-transform duration-500 ${isOutOfStock ? "opacity-60 grayscale" : "group-hover:scale-110"}`}
         />
+        
+        {/* Sold Out Badge */}
+        {isOutOfStock && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Badge variant="destructive" className="text-lg px-4 py-2 font-bold">
+              สินค้าหมด
+            </Badge>
+          </div>
+        )}
         
         {/* Favorite Button */}
         <button
@@ -39,15 +52,17 @@ const ProductCard = ({ id, name, price, image, rating, reviews }: ProductCardPro
         </button>
 
         {/* Quick Add to Cart - Shows on hover */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <Button 
-            className="w-full bg-primary hover:bg-primary-hover text-primary-foreground shadow-lg"
-            onClick={() => addToCart(id)}
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
-        </div>
+        {!isOutOfStock && (
+          <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+            <Button 
+              className="w-full bg-primary hover:bg-primary-hover text-primary-foreground shadow-lg"
+              onClick={() => addToCart(id)}
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              Add to Cart
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Product Info */}

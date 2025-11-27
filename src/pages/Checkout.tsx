@@ -185,6 +185,18 @@ const Checkout = () => {
 
       if (itemsError) throw itemsError;
 
+      // Deduct stock for each item
+      for (const item of items) {
+        const { error: stockError } = await supabase.rpc('deduct_product_stock', {
+          p_product_id: item.product_id,
+          p_quantity: item.quantity
+        });
+        
+        if (stockError) {
+          console.error("Error deducting stock:", stockError);
+        }
+      }
+
       // Clear cart
       await clearCart();
 
