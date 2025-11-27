@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import penthaiLogo from "@/assets/penthai-logo.png";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
@@ -27,10 +28,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-primary">
-              PENTHAI
-            </div>
+          <Link to="/" className="flex items-center gap-2">
+            <img src={penthaiLogo} alt="PENTHAI Logo" className="h-10 w-auto" />
+            <span className="text-2xl font-bold text-primary">PENTHAI</span>
           </Link>
 
           {/* Desktop Navigation */}
