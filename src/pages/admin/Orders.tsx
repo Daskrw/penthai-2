@@ -4,20 +4,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { CheckCircle, XCircle, Eye, Image, Clock, Truck, Ban } from "lucide-react";
+import { CheckCircle, XCircle, Eye, Clock, Truck, Ban } from "lucide-react";
+import OrderDetailsDialog from "@/components/admin/OrderDetailsDialog";
 import type { Database } from "@/integrations/supabase/types";
 
 type OrderStatus = Database["public"]["Enums"]["order_status"];
+
+interface OrderItem {
+  id: string;
+  product_name: string;
+  product_price: number;
+  quantity: number;
+}
 
 interface Order {
   id: string;
   order_number: string;
   status: OrderStatus;
   total: number;
+  subtotal: number;
+  shipping_fee: number;
   customer_name: string;
   customer_phone: string;
   shipping_address: string;
@@ -38,7 +47,7 @@ const statusConfig: Record<OrderStatus, { label: string; color: string; icon: Re
 const Orders = () => {
   const queryClient = useQueryClient();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [slipDialogOpen, setSlipDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
   const { data: orders, isLoading } = useQuery({
@@ -54,11 +63,25 @@ const Orders = () => {
     },
   });
 
+  const { data: orderItems } = useQuery({
+    queryKey: ["admin-order-items", selectedOrder?.id],
+    queryFn: async () => {
+      if (!selectedOrder) return [];
+      const { data, error } = await supabase
+        .from("order_items")
+        .select("*")
+        .eq("order_id", selectedOrder.id);
+
+      if (error) throw error;
+      return data as OrderItem[];
+    },
+    enabled: !!selectedOrder,
+  });
+
   const updateOrderMutation = useMutation({
     mutationFn: async ({ orderId, status }: { orderId: string; status: OrderStatus }) => {
       const updateData: { status: OrderStatus; paid_at?: string } = { status };
       
-      // Set paid_at when approving
       if (status === "paid") {
         updateData.paid_at = new Date().toISOString();
       }
@@ -96,6 +119,11 @@ const Orders = () => {
 
   const handleStatusChange = (orderId: string, status: OrderStatus) => {
     updateOrderMutation.mutate({ orderId, status });
+  };
+
+  const handleViewDetails = (order: Order) => {
+    setSelectedOrder(order);
+    setDetailsDialogOpen(true);
   };
 
   const filteredOrders = orders?.filter((order) =>
@@ -161,7 +189,6 @@ const Orders = () => {
                 <TableHead>Customer</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Payment Slip</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -185,23 +212,6 @@ const Orders = () => {
                       </span>
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    {order.payment_slip_url ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedOrder(order);
-                          setSlipDialogOpen(true);
-                        }}
-                      >
-                        <Image className="h-4 w-4 mr-1" />
-                        View Slip
-                      </Button>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">No slip</span>
-                    )}
-                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(order.created_at).toLocaleDateString("th-TH", {
                       year: "numeric",
@@ -212,51 +222,42 @@ const Orders = () => {
                     })}
                   </TableCell>
                   <TableCell>
-                    {order.status === "pending" ? (
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700"
-                          onClick={() => handleApprove(order)}
-                          disabled={updateOrderMutation.isPending}
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleReject(order)}
-                          disabled={updateOrderMutation.isPending}
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          Reject
-                        </Button>
-                      </div>
-                    ) : (
-                      <Select
-                        value={order.status}
-                        onValueChange={(value) => handleStatusChange(order.id, value as OrderStatus)}
-                        disabled={updateOrderMutation.isPending}
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleViewDetails(order)}
                       >
-                        <SelectTrigger className="w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="paid">Paid</SelectItem>
-                          <SelectItem value="shipped">Shipped</SelectItem>
-                          <SelectItem value="delivered">Delivered</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                        <Eye className="h-4 w-4 mr-1" />
+                        View Details
+                      </Button>
+                      {order.status === "pending" && (
+                        <>
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={() => handleApprove(order)}
+                            disabled={updateOrderMutation.isPending}
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleReject(order)}
+                            disabled={updateOrderMutation.isPending}
+                          >
+                            <XCircle className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
               {filteredOrders?.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     No orders found
                   </TableCell>
                 </TableRow>
@@ -266,52 +267,17 @@ const Orders = () => {
         </CardContent>
       </Card>
 
-      {/* Payment Slip Dialog */}
-      <Dialog open={slipDialogOpen} onOpenChange={setSlipDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Payment Slip - {selectedOrder?.order_number}</DialogTitle>
-            <DialogDescription>
-              Customer: {selectedOrder?.customer_name} | Total: ฿{selectedOrder?.total.toLocaleString()}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-center py-4">
-            {selectedOrder?.payment_slip_url && (
-              <img
-                src={selectedOrder.payment_slip_url}
-                alt="Payment slip"
-                className="max-h-[60vh] rounded-lg border shadow-sm"
-              />
-            )}
-          </div>
-          {selectedOrder?.status === "pending" && (
-            <DialogFooter>
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  handleReject(selectedOrder);
-                  setSlipDialogOpen(false);
-                }}
-                disabled={updateOrderMutation.isPending}
-              >
-                <XCircle className="h-4 w-4 mr-2" />
-                Reject Order
-              </Button>
-              <Button
-                className="bg-green-600 hover:bg-green-700"
-                onClick={() => {
-                  handleApprove(selectedOrder);
-                  setSlipDialogOpen(false);
-                }}
-                disabled={updateOrderMutation.isPending}
-              >
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Approve Order
-              </Button>
-            </DialogFooter>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Order Details Dialog */}
+      <OrderDetailsDialog
+        order={selectedOrder}
+        orderItems={orderItems || []}
+        open={detailsDialogOpen}
+        onOpenChange={setDetailsDialogOpen}
+        onStatusChange={handleStatusChange}
+        onApprove={handleApprove}
+        onReject={handleReject}
+        isUpdating={updateOrderMutation.isPending}
+      />
     </div>
   );
 };
