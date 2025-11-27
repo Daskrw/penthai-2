@@ -20,7 +20,7 @@ const Navbar = () => {
   return <nav className="sticky top-0 z-50 bg-card shadow-md">
       {/* Announcement Bar */}
       <div className="bg-primary text-primary-foreground py-2 text-center text-sm">
-        <p>🎉 จัดส่งฟรีเมื่อสั่งซื้อครบ 1,000 บาท!</p>
+        <p>🎉 จัดส่งฟรีเมื่อสั่งซื้อครบ 499 บาท!</p>
       </div>
 
       {/* Main Navigation */}
