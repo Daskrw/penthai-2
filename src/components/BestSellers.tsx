@@ -8,6 +8,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400",
     rating: 4.8,
     reviews: 124,
+    stock: 10,
   },
   {
     id: "2",
@@ -16,6 +17,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=400",
     rating: 4.9,
     reviews: 89,
+    stock: 10,
   },
   {
     id: "3",
@@ -24,6 +26,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400",
     rating: 4.7,
     reviews: 156,
+    stock: 10,
   },
   {
     id: "4",
@@ -32,6 +35,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1578500494198-246f612d3b3d?w=400",
     rating: 4.9,
     reviews: 67,
+    stock: 10,
   },
   {
     id: "5",
@@ -40,6 +44,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400",
     rating: 4.6,
     reviews: 203,
+    stock: 10,
   },
   {
     id: "6",
@@ -48,6 +53,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400",
     rating: 4.8,
     reviews: 142,
+    stock: 10,
   },
   {
     id: "7",
@@ -56,6 +62,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400",
     rating: 5.0,
     reviews: 98,
+    stock: 10,
   },
   {
     id: "8",
@@ -64,6 +71,7 @@ const products = [
     image: "https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=400",
     rating: 4.7,
     reviews: 76,
+    stock: 10,
   },
 ];
 
