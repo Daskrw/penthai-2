@@ -8,9 +8,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-2xl font-bold mb-4">PenThai</h3>
+            <h3 className="text-2xl font-bold mb-4">เป็นไทย</h3>
             <p className="text-secondary-foreground/80 mb-4">
-              Your trusted source for authentic Thai products. Quality, tradition, and excellence in every item.
+              แหล่งรวมสินค้าไทยแท้คุณภาพสูง ส่งตรงจากช่างฝีมือไทยสู่มือคุณ
             </p>
             <div className="flex gap-3">
               <a
@@ -36,26 +36,21 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-semibold mb-4">ลิงก์ด่วน</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/about" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  About Us
+                  เกี่ยวกับเรา
                 </Link>
               </li>
               <li>
                 <Link to="/shop" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  Shop
-                </Link>
-              </li>
-              <li>
-                <Link to="/categories" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  Categories
+                  สินค้า
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  Contact
+                  ติดต่อเรา
                 </Link>
               </li>
             </ul>
@@ -63,39 +58,39 @@ const Footer = () => {
 
           {/* Customer Service */}
           <div>
-            <h4 className="font-semibold mb-4">Customer Service</h4>
+            <h4 className="font-semibold mb-4">บริการลูกค้า</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/shipping" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  Shipping Info
-                </Link>
+                <span className="text-secondary-foreground/80">
+                  ข้อมูลการจัดส่ง
+                </span>
               </li>
               <li>
-                <Link to="/returns" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  Returns & Exchanges
-                </Link>
+                <span className="text-secondary-foreground/80">
+                  นโยบายคืนสินค้า
+                </span>
               </li>
               <li>
-                <Link to="/faq" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  FAQ
-                </Link>
+                <span className="text-secondary-foreground/80">
+                  คำถามที่พบบ่อย
+                </span>
               </li>
               <li>
-                <Link to="/privacy" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">
-                  Privacy Policy
-                </Link>
+                <span className="text-secondary-foreground/80">
+                  นโยบายความเป็นส่วนตัว
+                </span>
               </li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-semibold mb-4">Contact Us</h4>
+            <h4 className="font-semibold mb-4">ติดต่อเรา</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
                 <span className="text-secondary-foreground/80">
-                  123 Thai Street, Bangkok, Thailand
+                  123 ถนนไทย กรุงเทพมหานคร ประเทศไทย
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -115,7 +110,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 text-center text-secondary-foreground/60">
-          <p>&copy; 2024 PenThai. All rights reserved.</p>
+          <p>&copy; 2024 เป็นไทย สงวนลิขสิทธิ์</p>
         </div>
       </div>
     </footer>

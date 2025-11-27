@@ -32,14 +32,14 @@ const Auth = () => {
 
     if (error) {
       toast({
-        title: "Sign up failed",
+        title: "การลงทะเบียนล้มเหลว",
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Welcome to PenThai!",
-        description: "Your account has been created successfully"
+        title: "ยินดีต้อนรับสู่เป็นไทย!",
+        description: "สร้างบัญชีสำเร็จแล้ว"
       });
       navigate("/");
     }
@@ -54,14 +54,14 @@ const Auth = () => {
 
     if (error) {
       toast({
-        title: "Sign in failed",
+        title: "เข้าสู่ระบบล้มเหลว",
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in"
+        title: "ยินดีต้อนรับกลับมา!",
+        description: "เข้าสู่ระบบสำเร็จแล้ว"
       });
       navigate("/");
     }
@@ -74,7 +74,7 @@ const Auth = () => {
     
     if (error) {
       toast({
-        title: "Google sign in failed",
+        title: "เข้าสู่ระบบด้วย Google ล้มเหลว",
         description: error.message,
         variant: "destructive"
       });
@@ -90,22 +90,22 @@ const Auth = () => {
           <div className="max-w-md mx-auto">
             <Tabs defaultValue="signin" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="signin">เข้าสู่ระบบ</TabsTrigger>
+                <TabsTrigger value="signup">ลงทะเบียน</TabsTrigger>
               </TabsList>
 
               <TabsContent value="signin">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Sign In</CardTitle>
+                    <CardTitle>เข้าสู่ระบบ</CardTitle>
                     <CardDescription>
-                      Enter your credentials to access your account
+                      กรอกข้อมูลเพื่อเข้าสู่บัญชีของคุณ
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSignIn} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="signin-email">Email</Label>
+                        <Label htmlFor="signin-email">อีเมล</Label>
                         <Input
                           id="signin-email"
                           type="email"
@@ -116,7 +116,7 @@ const Auth = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="signin-password">Password</Label>
+                        <Label htmlFor="signin-password">รหัสผ่าน</Label>
                         <Input
                           id="signin-password"
                           type="password"
@@ -127,7 +127,7 @@ const Auth = () => {
                         />
                       </div>
                       <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Signing in..." : "Sign In"}
+                        {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
                       </Button>
                       
                       <div className="relative my-4">
@@ -135,7 +135,7 @@ const Auth = () => {
                           <span className="w-full border-t" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                          <span className="bg-background px-2 text-muted-foreground">หรือดำเนินการต่อด้วย</span>
                         </div>
                       </div>
                       
@@ -164,7 +164,7 @@ const Auth = () => {
                             fill="#EA4335"
                           />
                         </svg>
-                        Sign in with Google
+                        เข้าสู่ระบบด้วย Google
                       </Button>
                     </form>
                   </CardContent>
@@ -174,26 +174,26 @@ const Auth = () => {
               <TabsContent value="signup">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Sign Up</CardTitle>
+                    <CardTitle>ลงทะเบียน</CardTitle>
                     <CardDescription>
-                      Create a new account to start shopping
+                      สร้างบัญชีใหม่เพื่อเริ่มช้อปปิ้ง
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSignUp} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="signup-name">Full Name</Label>
+                        <Label htmlFor="signup-name">ชื่อ-นามสกุล</Label>
                         <Input
                           id="signup-name"
                           type="text"
-                          placeholder="John Doe"
+                          placeholder="กรอกชื่อ-นามสกุล"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="signup-email">Email</Label>
+                        <Label htmlFor="signup-email">อีเมล</Label>
                         <Input
                           id="signup-email"
                           type="email"
@@ -204,7 +204,7 @@ const Auth = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="signup-password">Password</Label>
+                        <Label htmlFor="signup-password">รหัสผ่าน</Label>
                         <Input
                           id="signup-password"
                           type="password"
@@ -216,7 +216,7 @@ const Auth = () => {
                         />
                       </div>
                       <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Creating account..." : "Sign Up"}
+                        {loading ? "กำลังสร้างบัญชี..." : "ลงทะเบียน"}
                       </Button>
                       
                       <div className="relative my-4">
@@ -224,7 +224,7 @@ const Auth = () => {
                           <span className="w-full border-t" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                          <span className="bg-background px-2 text-muted-foreground">หรือดำเนินการต่อด้วย</span>
                         </div>
                       </div>
                       
@@ -253,7 +253,7 @@ const Auth = () => {
                             fill="#EA4335"
                           />
                         </svg>
-                        Sign up with Google
+                        ลงทะเบียนด้วย Google
                       </Button>
                     </form>
                   </CardContent>

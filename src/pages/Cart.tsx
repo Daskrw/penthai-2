@@ -24,8 +24,8 @@ const Cart = () => {
         <main className="min-h-screen bg-background py-8">
           <div className="container mx-auto px-4 text-center">
             <ShoppingBag className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h1 className="text-2xl font-bold mb-4">Please login to view your cart</h1>
-            <Button onClick={() => navigate("/auth")}>Login</Button>
+            <h1 className="text-2xl font-bold mb-4">กรุณาเข้าสู่ระบบเพื่อดูตะกร้าสินค้า</h1>
+            <Button onClick={() => navigate("/auth")}>เข้าสู่ระบบ</Button>
           </div>
         </main>
         <Footer />
@@ -54,9 +54,9 @@ const Cart = () => {
         <main className="min-h-screen bg-background py-8">
           <div className="container mx-auto px-4 text-center">
             <ShoppingBag className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-            <p className="text-muted-foreground mb-6">Start shopping to add items to your cart</p>
-            <Button onClick={() => navigate("/shop")}>Continue Shopping</Button>
+            <h1 className="text-2xl font-bold mb-4">ตะกร้าสินค้าว่างเปล่า</h1>
+            <p className="text-muted-foreground mb-6">เริ่มช้อปปิ้งเพื่อเพิ่มสินค้าลงตะกร้า</p>
+            <Button onClick={() => navigate("/shop")}>เลือกซื้อสินค้า</Button>
           </div>
         </main>
         <Footer />
@@ -69,7 +69,7 @@ const Cart = () => {
       <Navbar />
       <main className="min-h-screen bg-background py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-8">ตะกร้าของฉัน</h1>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
@@ -130,20 +130,20 @@ const Cart = () => {
             <div className="lg:col-span-1">
               <Card className="sticky top-24">
                 <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
+                  <CardTitle>สรุปรายการสั่งซื้อ</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Subtotal</span>
+                    <span className="text-muted-foreground">ยอดรวม</span>
                     <span>฿{cartTotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Shipping Fee</span>
+                    <span className="text-muted-foreground">ค่าจัดส่ง</span>
                     <span>฿{SHIPPING_FEE.toLocaleString()}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Grand Total</span>
+                    <span>ยอดรวมทั้งหมด</span>
                     <span className="text-primary">฿{grandTotal.toLocaleString()}</span>
                   </div>
                 </CardContent>
@@ -153,7 +153,7 @@ const Cart = () => {
                     size="lg"
                     onClick={() => navigate("/checkout")}
                   >
-                    Proceed to Checkout
+                    ดำเนินการชำระเงิน
                   </Button>
                 </CardFooter>
               </Card>

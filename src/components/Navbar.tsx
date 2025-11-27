@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingCart, User, Search, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingCart, User, Search, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -24,7 +24,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-card shadow-md">
       {/* Announcement Bar */}
       <div className="bg-primary text-primary-foreground py-2 text-center text-sm">
-        <p>🎉 Free Shipping on orders over 1000 THB!</p>
+        <p>🎉 จัดส่งฟรีเมื่อสั่งซื้อครบ 1,000 บาท!</p>
       </div>
 
       {/* Main Navigation */}
@@ -33,23 +33,23 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="text-2xl font-bold text-primary">
-              PenThai
+              เป็นไทย
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-foreground hover:text-primary transition-colors">
-              Home
+              หน้าแรก
             </Link>
             <Link to="/shop" className="text-foreground hover:text-primary transition-colors">
-              Shop
+              สินค้า
             </Link>
             <Link to="/about" className="text-foreground hover:text-primary transition-colors">
-              About
+              เกี่ยวกับเรา
             </Link>
             <Link to="/contact" className="text-foreground hover:text-primary transition-colors">
-              Contact
+              ติดต่อเรา
             </Link>
           </div>
 
@@ -68,21 +68,21 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => navigate("/account")}>
-                    My Account
+                    บัญชีของฉัน
                   </DropdownMenuItem>
                   {isAdmin && (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => navigate("/admin")}>
                         <LayoutDashboard className="h-4 w-4 mr-2" />
-                        Admin Dashboard
+                        แผงควบคุมผู้ดูแล
                       </DropdownMenuItem>
                     </>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut}>
                     <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
+                    ออกจากระบบ
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -127,33 +127,33 @@ const Navbar = () => {
                 className="text-foreground hover:text-primary transition-colors py-2"
                 onClick={toggleMenu}
               >
-                Home
+                หน้าแรก
               </Link>
               <Link
                 to="/shop"
                 className="text-foreground hover:text-primary transition-colors py-2"
                 onClick={toggleMenu}
               >
-                Shop
+                สินค้า
               </Link>
               <Link
                 to="/about"
                 className="text-foreground hover:text-primary transition-colors py-2"
                 onClick={toggleMenu}
               >
-                About
+                เกี่ยวกับเรา
               </Link>
               <Link
                 to="/contact"
                 className="text-foreground hover:text-primary transition-colors py-2"
                 onClick={toggleMenu}
               >
-                Contact
+                ติดต่อเรา
               </Link>
               <div className="pt-4 border-t border-border">
                 <Button variant="outline" className="w-full">
                   <Search className="h-4 w-4 mr-2" />
-                  Search
+                  ค้นหา
                 </Button>
               </div>
             </div>
