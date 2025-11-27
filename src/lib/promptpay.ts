@@ -1,15 +1,7 @@
 // PromptPay QR Code Payload Generator (EMVCo Standard)
 // Reference: https://www.bot.or.th/Thai/PaymentSystems/StandardPS/Documents/ThaiQRCode_Standard.pdf
 
-const PROMPTPAY_ID = "00";
-const PROMPTPAY_METHOD = "01";
-const MERCHANT_INFO = "29";
-const APP_ID = "0016A000000677010111";
-const COUNTRY_CODE = "5802TH";
-const CURRENCY_CODE = "5303764";
-const CHECKSUM_ID = "6304";
-
-// CRC-16 CCITT calculation
+// CRC-16 CCITT-FALSE calculation
 function crc16(str: string): string {
   let crc = 0xffff;
   for (let i = 0; i < str.length; i++) {
@@ -20,31 +12,30 @@ function crc16(str: string): string {
       } else {
         crc <<= 1;
       }
+      crc &= 0xffff;
     }
   }
   return (crc & 0xffff).toString(16).toUpperCase().padStart(4, "0");
 }
 
-function formatLength(value: string): string {
-  return value.length.toString().padStart(2, "0");
-}
-
 function formatTLV(id: string, value: string): string {
-  return id + formatLength(value) + value;
+  const length = value.length.toString().padStart(2, "0");
+  return id + length + value;
 }
 
 function formatPhoneNumber(phone: string): string {
-  // Remove all non-digit characters
+  // Remove all non-digit characters (dashes, spaces, etc.)
   const digits = phone.replace(/\D/g, "");
   
   // Thai phone numbers: convert 0x to 66x format
+  // e.g., 0616080720 -> 66616080720
   if (digits.startsWith("0")) {
-    return "0066" + digits.substring(1);
+    return "66" + digits.substring(1);
   }
   
-  // If already has country code
+  // If already has country code 66
   if (digits.startsWith("66")) {
-    return "00" + digits;
+    return digits;
   }
   
   return digits;
@@ -54,42 +45,46 @@ export function generatePromptPayPayload(
   phoneNumber: string,
   amount?: number
 ): string {
-  // Format phone number for PromptPay
+  // Format phone number to international format (66xxxxxxxxx)
   const formattedPhone = formatPhoneNumber(phoneNumber);
   
-  // Build merchant account information
+  // PromptPay Application ID
+  const AID = "A000000677010111";
+  
+  // Build Merchant Account Information subfields (Tag 29)
+  // Sub-tag 00: Application ID
+  // Sub-tag 01: Phone number with prefix "00" + country code
   const merchantSubfields = 
-    formatTLV("00", APP_ID) + 
-    formatTLV("01", formattedPhone);
+    formatTLV("00", AID) + 
+    formatTLV("01", "00" + formattedPhone);
   
   // Build main payload
   let payload = "";
   
-  // Payload Format Indicator
+  // Tag 00: Payload Format Indicator (always "01")
   payload += formatTLV("00", "01");
   
-  // Point of Initiation Method (11 = static, 12 = dynamic)
-  payload += formatTLV("01", amount ? "12" : "11");
+  // Tag 01: Point of Initiation Method
+  // "11" = Static QR (reusable), "12" = Dynamic QR (one-time with amount)
+  payload += formatTLV("01", amount && amount > 0 ? "12" : "11");
   
-  // Merchant Account Information (Tag 29 for PromptPay)
+  // Tag 29: Merchant Account Information (PromptPay)
   payload += formatTLV("29", merchantSubfields);
   
-  // Country Code
-  payload += COUNTRY_CODE;
+  // Tag 58: Country Code
+  payload += formatTLV("58", "TH");
   
-  // Transaction Currency (764 = THB)
-  payload += CURRENCY_CODE;
+  // Tag 53: Transaction Currency (764 = THB)
+  payload += formatTLV("53", "764");
   
-  // Transaction Amount (optional)
+  // Tag 54: Transaction Amount (optional)
   if (amount && amount > 0) {
     const amountStr = amount.toFixed(2);
     payload += formatTLV("54", amountStr);
   }
   
-  // Checksum placeholder
-  payload += CHECKSUM_ID;
-  
-  // Calculate and append CRC
+  // Tag 63: CRC - Add placeholder and calculate
+  payload += "6304";
   const checksum = crc16(payload);
   payload += checksum;
   
