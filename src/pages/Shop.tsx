@@ -88,9 +88,9 @@ const Shop = () => {
   };
 
   const getPageTitle = () => {
-    if (productType === 'consumer') return 'สินค้าอุปโภค (ของใช้)';
-    if (productType === 'consumable') return 'สินค้าบริโภค (ของกิน)';
-    return 'Shop';
+    if (productType === 'consumer') return 'สินค้าอุปโภค (Consumer Goods)';
+    if (productType === 'consumable') return 'สินค้าบริโภค (Consumables)';
+    return 'สินค้าทั้งหมด (All Products)';
   };
 
   return (
