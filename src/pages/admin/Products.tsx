@@ -17,6 +17,7 @@ interface Product {
   category: string;
   stock: number;
   image_url: string;
+  product_type: 'consumer' | 'consumable';
 }
 
 const Products = () => {
@@ -30,7 +31,8 @@ const Products = () => {
     description: "",
     category: "",
     stock: "",
-    image_url: ""
+    image_url: "",
+    product_type: "consumer" as 'consumer' | 'consumable'
   });
 
   useEffect(() => {
@@ -70,7 +72,8 @@ const Products = () => {
         description: formData.description,
         category: formData.category,
         stock: parseInt(formData.stock),
-        image_url: formData.image_url
+        image_url: formData.image_url,
+        product_type: formData.product_type
       };
 
       if (editingProduct) {
@@ -135,7 +138,8 @@ const Products = () => {
       description: product.description || "",
       category: product.category,
       stock: product.stock.toString(),
-      image_url: product.image_url || ""
+      image_url: product.image_url || "",
+      product_type: product.product_type || "consumer"
     });
     setDialogOpen(true);
   };
@@ -148,7 +152,8 @@ const Products = () => {
       description: "",
       category: "",
       stock: "",
-      image_url: ""
+      image_url: "",
+      product_type: "consumer"
     });
   };
 
@@ -238,6 +243,20 @@ const Products = () => {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="product_type">Product Type *</Label>
+                <select
+                  id="product_type"
+                  value={formData.product_type}
+                  onChange={(e) => setFormData({ ...formData, product_type: e.target.value as 'consumer' | 'consumable' })}
+                  required
+                  className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+                >
+                  <option value="consumer">สินค้าอุปโภค (Consumer Goods)</option>
+                  <option value="consumable">สินค้าบริโภค (Consumables)</option>
+                </select>
               </div>
 
               <div className="flex justify-end gap-2">
