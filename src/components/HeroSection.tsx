@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroBanner from "@/assets/hero-banner.jpg";
 
 const HeroSection = () => {
@@ -9,7 +10,7 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <img
           src={heroBanner}
-          alt="Authentic Thai Products"
+          alt="สินค้าไทยแท้คุณภาพสูง"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
@@ -19,28 +20,34 @@ const HeroSection = () => {
       <div className="relative container mx-auto px-4 h-full flex items-center">
         <div className="max-w-2xl text-white">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-            Discover Authentic
+            สัมผัสความเป็น
             <br />
-            <span className="text-accent">Thai Excellence</span>
+            <span className="text-accent">ไทยแท้</span>
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-200 animate-fade-in">
-            Premium Thai products, carefully curated for quality and authenticity.
-            From traditional crafts to modern luxuries.
+            สินค้าไทยคุณภาพสูง คัดสรรมาอย่างพิถีพิถัน
+            จากฝีมือช่างไทยสู่วิถีชีวิตสมัยใหม่
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
             <Button
+              asChild
               size="lg"
               className="bg-primary hover:bg-primary-hover text-primary-foreground shadow-thai-lg group"
             >
-              Shop Now
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Link to="/shop">
+                เลือกซื้อสินค้า
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
             <Button
+              asChild
               size="lg"
               variant="outline"
               className="bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white hover:text-foreground"
             >
-              Explore Categories
+              <Link to="/about">
+                เกี่ยวกับเรา
+              </Link>
             </Button>
           </div>
 
@@ -50,19 +57,19 @@ const HeroSection = () => {
               <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center">
                 ✓
               </div>
-              <span>Secure Payment</span>
+              <span>ชำระเงินปลอดภัย</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center">
                 ✓
               </div>
-              <span>Quality Guarantee</span>
+              <span>รับประกันคุณภาพ</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center">
                 ✓
               </div>
-              <span>Fast Shipping</span>
+              <span>จัดส่งรวดเร็ว</span>
             </div>
           </div>
         </div>

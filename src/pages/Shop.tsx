@@ -87,9 +87,9 @@ const Shop = () => {
   };
 
   const getPageTitle = () => {
-    if (selectedProductType === 'consumer') return 'สินค้าอุปโภค (Consumer Goods)';
-    if (selectedProductType === 'consumable') return 'สินค้าบริโภค (Consumables)';
-    return 'สินค้าทั้งหมด (All Products)';
+    if (selectedProductType === 'consumer') return 'สินค้าอุปโภค';
+    if (selectedProductType === 'consumable') return 'สินค้าบริโภค';
+    return 'สินค้าทั้งหมด';
   };
 
   return (
@@ -103,28 +103,28 @@ const Shop = () => {
             {/* Sidebar Filters */}
             <aside className="w-full md:w-64 space-y-6">
               <div className="bg-card p-6 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold text-foreground mb-4">Filters</h2>
+                <h2 className="text-xl font-semibold text-foreground mb-4">ตัวกรอง</h2>
                 
                 {/* Product Type Filter */}
                 <div className="mb-6">
-                  <Label className="text-lg font-medium mb-3 block">ประเภทสินค้า (Product Type)</Label>
+                  <Label className="text-lg font-medium mb-3 block">ประเภทสินค้า</Label>
                   <RadioGroup value={selectedProductType} onValueChange={(value: any) => setSelectedProductType(value)}>
                     <div className="flex items-center space-x-2 mb-2">
                       <RadioGroupItem value="all" id="type-all" />
                       <label htmlFor="type-all" className="text-sm font-medium cursor-pointer">
-                        ทั้งหมด (All Products)
+                        ทั้งหมด
                       </label>
                     </div>
                     <div className="flex items-center space-x-2 mb-2">
                       <RadioGroupItem value="consumer" id="type-consumer" />
                       <label htmlFor="type-consumer" className="text-sm font-medium cursor-pointer">
-                        สินค้าอุปโภค (Consumer Goods)
+                        สินค้าอุปโภค
                       </label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="consumable" id="type-consumable" />
                       <label htmlFor="type-consumable" className="text-sm font-medium cursor-pointer">
-                        สินค้าบริโภค (Consumables)
+                        สินค้าบริโภค
                       </label>
                     </div>
                   </RadioGroup>
@@ -132,7 +132,7 @@ const Shop = () => {
 
                 {/* Category Filter */}
                 <div className="mb-6">
-                  <Label className="text-lg font-medium mb-3 block">Categories</Label>
+                  <Label className="text-lg font-medium mb-3 block">หมวดหมู่</Label>
                   <div className="space-y-2">
                     {categories.map((category) => (
                       <div key={category} className="flex items-center space-x-2">
@@ -155,7 +155,7 @@ const Shop = () => {
                 {/* Price Filter */}
                 <div>
                   <Label className="text-lg font-medium mb-3 block">
-                    Price Range: ฿{priceRange[0]} - ฿{priceRange[1]}
+                    ช่วงราคา: ฿{priceRange[0].toLocaleString()} - ฿{priceRange[1].toLocaleString()}
                   </Label>
                   <Slider
                     value={priceRange}
@@ -176,7 +176,7 @@ const Shop = () => {
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center py-16">
-                  <p className="text-xl text-muted-foreground">No products found</p>
+                  <p className="text-xl text-muted-foreground">ไม่พบสินค้า</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

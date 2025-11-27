@@ -74,8 +74,8 @@ const Checkout = () => {
     e.preventDefault();
     if (!addressForm.name || !addressForm.phone || !addressForm.address) {
       toast({
-        title: "Missing information",
-        description: "Please fill in all required fields",
+        title: "ข้อมูลไม่ครบถ้วน",
+        description: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
         variant: "destructive"
       });
       return;
@@ -96,8 +96,8 @@ const Checkout = () => {
       // Validate file type
       if (!file.type.startsWith("image/")) {
         toast({
-          title: "Invalid file",
-          description: "Please upload an image file (JPG, PNG, etc.)",
+          title: "ไฟล์ไม่ถูกต้อง",
+          description: "กรุณาอัปโหลดไฟล์รูปภาพ (JPG, PNG ฯลฯ)",
           variant: "destructive"
         });
         return;
@@ -106,8 +106,8 @@ const Checkout = () => {
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast({
-          title: "File too large",
-          description: "Please upload an image smaller than 5MB",
+          title: "ไฟล์ใหญ่เกินไป",
+          description: "กรุณาอัปโหลดรูปภาพขนาดไม่เกิน 5MB",
           variant: "destructive"
         });
         return;
@@ -211,8 +211,8 @@ const Checkout = () => {
     } catch (error) {
       console.error("Error creating order:", error);
       toast({
-        title: "Error",
-        description: "Failed to create order. Please try again.",
+        title: "เกิดข้อผิดพลาด",
+        description: "ไม่สามารถสร้างคำสั่งซื้อได้ กรุณาลองใหม่อีกครั้ง",
         variant: "destructive"
       });
     } finally {
@@ -235,8 +235,8 @@ const Checkout = () => {
         <main className="min-h-screen bg-background py-8">
           <div className="container mx-auto px-4 text-center">
             <AlertCircle className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-            <Button onClick={() => navigate("/shop")}>Continue Shopping</Button>
+            <h1 className="text-2xl font-bold mb-4">ตะกร้าสินค้าว่างเปล่า</h1>
+            <Button onClick={() => navigate("/shop")}>เลือกซื้อสินค้า</Button>
           </div>
         </main>
         <Footer />
@@ -255,14 +255,14 @@ const Checkout = () => {
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === "address" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                 1
               </div>
-              <span className="font-medium hidden sm:inline">Address</span>
+              <span className="font-medium hidden sm:inline">ที่อยู่</span>
             </div>
             <div className="w-12 h-0.5 bg-border" />
             <div className={`flex items-center gap-2 ${step === "payment" ? "text-primary" : "text-muted-foreground"}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === "payment" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                 2
               </div>
-              <span className="font-medium hidden sm:inline">Payment</span>
+              <span className="font-medium hidden sm:inline">ชำระเงิน</span>
             </div>
           </div>
 
@@ -272,38 +272,38 @@ const Checkout = () => {
               {step === "address" ? (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Shipping Address</CardTitle>
-                    <CardDescription>Enter your delivery information</CardDescription>
+                    <CardTitle>ที่อยู่จัดส่ง</CardTitle>
+                    <CardDescription>กรอกข้อมูลสำหรับการจัดส่งสินค้า</CardDescription>
                   </CardHeader>
                   <form onSubmit={handleAddressSubmit}>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Full Name *</Label>
+                        <Label htmlFor="name">ชื่อ-นามสกุล *</Label>
                         <Input
                           id="name"
                           value={addressForm.name}
                           onChange={(e) => setAddressForm({ ...addressForm, name: e.target.value })}
-                          placeholder="Enter your full name"
+                          placeholder="กรอกชื่อ-นามสกุล"
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number *</Label>
+                        <Label htmlFor="phone">เบอร์โทรศัพท์ *</Label>
                         <Input
                           id="phone"
                           value={addressForm.phone}
                           onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
-                          placeholder="e.g., 081-234-5678"
+                          placeholder="เช่น 081-234-5678"
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="address">Shipping Address *</Label>
+                        <Label htmlFor="address">ที่อยู่จัดส่ง *</Label>
                         <Input
                           id="address"
                           value={addressForm.address}
                           onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
-                          placeholder="Enter your full address"
+                          placeholder="กรอกที่อยู่สำหรับจัดส่ง"
                           required
                         />
                       </div>
@@ -311,10 +311,10 @@ const Checkout = () => {
                     <CardFooter className="flex justify-between">
                       <Button type="button" variant="outline" onClick={() => navigate("/cart")}>
                         <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to Cart
+                        กลับไปตะกร้า
                       </Button>
                       <Button type="submit">
-                        Continue to Payment
+                        ดำเนินการชำระเงิน
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </CardFooter>
@@ -325,17 +325,17 @@ const Checkout = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <QrCode className="h-5 w-5 text-primary" />
-                      QR Payment / PromptPay
+                      ชำระเงินผ่าน QR / พร้อมเพย์
                     </CardTitle>
-                    <CardDescription>Scan QR code with any banking app</CardDescription>
+                    <CardDescription>สแกน QR Code ผ่านแอปธนาคาร</CardDescription>
                     
                     {/* Countdown Timer */}
                     <div className={`flex items-center gap-2 mt-4 p-3 rounded-lg ${isExpired ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
                       <Clock className="h-5 w-5" />
                       <span className="font-medium">
                         {isExpired 
-                          ? "Session Expired" 
-                          : `Time remaining to pay: ${formatTime(timeRemaining)}`
+                          ? "เซสชันหมดอายุ" 
+                          : `เวลาที่เหลือในการชำระเงิน: ${formatTime(timeRemaining)}`
                         }
                       </span>
                     </div>
@@ -344,20 +344,20 @@ const Checkout = () => {
                     {isExpired ? (
                       <div className="text-center py-8">
                         <AlertCircle className="h-16 w-16 mx-auto text-destructive mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Payment Session Expired</h3>
+                        <h3 className="text-xl font-semibold mb-2">เซสชันการชำระเงินหมดอายุ</h3>
                         <p className="text-muted-foreground mb-4">
-                          Your payment session has timed out. Please refresh to continue.
+                          เซสชันการชำระเงินของคุณหมดอายุแล้ว กรุณารีเฟรชเพื่อดำเนินการต่อ
                         </p>
                         <Button onClick={handleRefreshOrder}>
                           <RefreshCw className="h-4 w-4 mr-2" />
-                          Refresh Order
+                          รีเฟรชคำสั่งซื้อ
                         </Button>
                       </div>
                     ) : (
                       <>
                         {/* QR Code */}
                         <div className="text-center space-y-4">
-                          <h3 className="font-semibold">Scan QR Code to Pay</h3>
+                          <h3 className="font-semibold">สแกน QR Code เพื่อชำระเงิน</h3>
                           <div className="inline-block p-4 bg-white rounded-lg shadow-lg">
                             <QRCodeSVG 
                               value={promptPayPayload} 
@@ -366,7 +366,7 @@ const Checkout = () => {
                             />
                           </div>
                           <div className="space-y-1">
-                            <p className="text-sm text-muted-foreground">PromptPay: {PROMPTPAY_PHONE}</p>
+                            <p className="text-sm text-muted-foreground">พร้อมเพย์: {PROMPTPAY_PHONE}</p>
                             <p className="text-lg font-bold text-primary">฿{grandTotal.toLocaleString()}</p>
                           </div>
                         </div>
@@ -376,7 +376,7 @@ const Checkout = () => {
                         {/* Slip Upload */}
                         <div className="space-y-3">
                           <Label className="text-base font-semibold">
-                            แนบหลักฐานการโอนเงิน (Upload Slip) *
+                            แนบหลักฐานการโอนเงิน *
                           </Label>
                           <p className="text-sm text-muted-foreground">
                             กรุณาแนบสลิปการโอนเงินเพื่อยืนยันการชำระเงิน
@@ -394,7 +394,7 @@ const Checkout = () => {
                             <div className="relative">
                               <img
                                 src={slipPreview}
-                                alt="Payment slip preview"
+                                alt="ตัวอย่างสลิป"
                                 className="max-h-64 mx-auto rounded-lg border shadow-sm"
                               />
                               <Button
@@ -405,7 +405,7 @@ const Checkout = () => {
                                 onClick={() => fileInputRef.current?.click()}
                               >
                                 <Upload className="h-4 w-4 mr-2" />
-                                Change Image
+                                เปลี่ยนรูปภาพ
                               </Button>
                             </div>
                           ) : (
@@ -414,9 +414,9 @@ const Checkout = () => {
                               className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 hover:bg-accent/50 transition-colors"
                             >
                               <ImageIcon className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-                              <p className="font-medium">Click to upload payment slip</p>
+                              <p className="font-medium">คลิกเพื่ออัปโหลดสลิป</p>
                               <p className="text-sm text-muted-foreground mt-1">
-                                Supports JPG, PNG (max 5MB)
+                                รองรับ JPG, PNG (ไม่เกิน 5MB)
                               </p>
                             </div>
                           )}
@@ -428,7 +428,7 @@ const Checkout = () => {
                     <CardFooter className="flex justify-between">
                       <Button variant="outline" onClick={() => setStep("address")}>
                         <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back
+                        ย้อนกลับ
                       </Button>
                       <Button 
                         onClick={handleConfirmPayment}
@@ -438,12 +438,12 @@ const Checkout = () => {
                         {isProcessing ? (
                           <>
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                            Processing...
+                            กำลังดำเนินการ...
                           </>
                         ) : (
                           <>
                             <CheckCircle className="h-4 w-4 mr-2" />
-                            Confirm Payment
+                            ยืนยันการชำระเงิน
                           </>
                         )}
                       </Button>
@@ -453,51 +453,44 @@ const Checkout = () => {
               )}
             </div>
 
-            {/* Order Summary Sidebar */}
+            {/* Order Summary */}
             <div className="lg:col-span-1">
               <Card className="sticky top-24">
                 <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
+                  <CardTitle>สรุปรายการสั่งซื้อ</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Items List */}
-                  <div className="space-y-3 max-h-48 overflow-y-auto">
-                    {items.map((item) => (
-                      <div key={item.id} className="flex gap-3">
-                        <img
-                          src={item.product.image_url || "/placeholder.svg"}
-                          alt={item.product.name}
-                          className="w-12 h-12 object-cover rounded"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{item.product.name}</p>
-                          <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                        </div>
-                        <p className="text-sm font-medium">
-                          ฿{(item.product.price * item.quantity).toLocaleString()}
-                        </p>
+                  {items.map((item) => (
+                    <div key={item.id} className="flex gap-3">
+                      <img
+                        src={item.product.image_url || "/placeholder.svg"}
+                        alt={item.product.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-sm line-clamp-2">{item.product.name}</p>
+                        <p className="text-sm text-muted-foreground">จำนวน: {item.quantity}</p>
+                        <p className="text-sm font-semibold">฿{(item.product.price * item.quantity).toLocaleString()}</p>
                       </div>
-                    ))}
-                  </div>
-
+                    </div>
+                  ))}
+                  
                   <Separator />
-
+                  
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="text-muted-foreground">ยอดรวม</span>
                       <span>฿{cartTotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Shipping</span>
+                      <span className="text-muted-foreground">ค่าจัดส่ง</span>
                       <span>฿{SHIPPING_FEE.toLocaleString()}</span>
                     </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex justify-between font-semibold text-lg">
-                    <span>Total</span>
-                    <span className="text-primary">฿{grandTotal.toLocaleString()}</span>
+                    <Separator />
+                    <div className="flex justify-between font-bold">
+                      <span>ยอดรวมทั้งหมด</span>
+                      <span className="text-primary">฿{grandTotal.toLocaleString()}</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
