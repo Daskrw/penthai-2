@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Package, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, LogOut } from "lucide-react";
 
 const AdminLayout = () => {
   const { signOut } = useAuth();
@@ -25,6 +25,16 @@ const AdminLayout = () => {
             >
               <LayoutDashboard className="mr-2 h-4 w-4" />
               Dashboard
+            </Button>
+          </Link>
+          
+          <Link to="/admin/orders">
+            <Button
+              variant={isActive("/admin/orders") ? "secondary" : "ghost"}
+              className="w-full justify-start"
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Orders
             </Button>
           </Link>
           

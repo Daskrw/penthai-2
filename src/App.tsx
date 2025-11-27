@@ -17,6 +17,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Account from "./pages/Account";
 import Dashboard from "./pages/admin/Dashboard";
+import Orders from "./pages/admin/Orders";
 import Products from "./pages/admin/Products";
 import NotFound from "./pages/NotFound";
 
@@ -60,6 +61,7 @@ const App = () => (
                 </ProtectedRoute>
               }>
                 <Route index element={<Dashboard />} />
+                <Route path="orders" element={<Orders />} />
                 <Route path="products" element={<Products />} />
               </Route>
 
