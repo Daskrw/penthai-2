@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   id: string;
@@ -11,8 +12,9 @@ interface ProductCardProps {
   reviews: number;
 }
 
-const ProductCard = ({ name, price, image, rating, reviews }: ProductCardProps) => {
+const ProductCard = ({ id, name, price, image, rating, reviews }: ProductCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const { addToCart } = useCart();
 
   return (
     <div className="group bg-card rounded-lg overflow-hidden shadow-md hover:shadow-thai-lg transition-all duration-300 hover-lift">
@@ -38,7 +40,10 @@ const ProductCard = ({ name, price, image, rating, reviews }: ProductCardProps) 
 
         {/* Quick Add to Cart - Shows on hover */}
         <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <Button className="w-full bg-primary hover:bg-primary-hover text-primary-foreground shadow-lg">
+          <Button 
+            className="w-full bg-primary hover:bg-primary-hover text-primary-foreground shadow-lg"
+            onClick={() => addToCart(id)}
+          >
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>
