@@ -45,24 +45,6 @@ const Navbar = () => {
             <Link to="/shop" className="text-foreground hover:text-primary transition-colors">
               Shop
             </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-colors">
-                หมวดหมู่สินค้า
-                <ChevronDown className="h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-background border-border z-50">
-                <DropdownMenuItem asChild>
-                  <Link to="/shop?type=consumer" className="cursor-pointer">
-                    สินค้าอุปโภค (ของใช้)
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/shop?type=consumable" className="cursor-pointer">
-                    สินค้าบริโภค (ของกิน)
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Link to="/about" className="text-foreground hover:text-primary transition-colors">
               About
             </Link>
@@ -149,23 +131,6 @@ const Navbar = () => {
               >
                 Shop
               </Link>
-              <div className="pl-4 space-y-2">
-                <p className="text-sm font-medium text-foreground">หมวดหมู่สินค้า</p>
-                <Link
-                  to="/shop?type=consumer"
-                  className="block text-sm text-foreground hover:text-primary transition-colors py-1"
-                  onClick={toggleMenu}
-                >
-                  สินค้าอุปโภค (ของใช้)
-                </Link>
-                <Link
-                  to="/shop?type=consumable"
-                  className="block text-sm text-foreground hover:text-primary transition-colors py-1"
-                  onClick={toggleMenu}
-                >
-                  สินค้าบริโภค (ของกิน)
-                </Link>
-              </div>
               <Link
                 to="/about"
                 className="text-foreground hover:text-primary transition-colors py-2"
