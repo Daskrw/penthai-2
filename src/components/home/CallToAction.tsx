@@ -20,29 +20,17 @@ const CallToAction = () => {
             เราพร้อมรับฟังและร่วมมือกับคุณเพื่อส่งเสริมสินค้าไทยสู่ตลาดที่กว้างขึ้น
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="bg-white text-primary hover:bg-white/90"
-            >
-              <Link to="/contact">
-                ติดต่อเรา
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white/10"
-            >
-              <Link to="/about">
-                เรียนรู้เพิ่มเติม
-              </Link>
-            </Button>
-          </div>
+          <Button
+            asChild
+            size="lg"
+            variant="secondary"
+            className="bg-white text-primary hover:bg-white/90"
+          >
+            <Link to="/contact">
+              ติดต่อเรา
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
