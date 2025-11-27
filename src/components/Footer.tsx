@@ -1,9 +1,7 @@
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Footer = () => {
-  return (
-    <footer className="bg-secondary text-secondary-foreground">
+  return <footer className="bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -13,22 +11,13 @@ const Footer = () => {
               แหล่งรวมสินค้าไทยแท้คุณภาพสูง ส่งตรงจากช่างฝีมือไทยสู่มือคุณ
             </p>
             <div className="flex gap-3">
-              <a
-                href="#"
-                className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-              >
+              <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a
-                href="#"
-                className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-              >
+              <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a
-                href="#"
-                className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-              >
+              <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
@@ -65,11 +54,7 @@ const Footer = () => {
                   ข้อมูลการจัดส่ง
                 </span>
               </li>
-              <li>
-                <span className="text-secondary-foreground/80">
-                  นโยบายคืนสินค้า
-                </span>
-              </li>
+              
               <li>
                 <span className="text-secondary-foreground/80">
                   คำถามที่พบบ่อย
@@ -90,19 +75,19 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
                 <span className="text-secondary-foreground/80">
-                  123 ถนนไทย กรุงเทพมหานคร ประเทศไทย
+                  85/1 ถนนแจ้งวัฒนะ ตำบลบางตลาด อำเภอปากเกร็ด จังหวัดนนทบุรี 11120
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 flex-shrink-0" />
                 <span className="text-secondary-foreground/80">
-                  +66 2 123 4567
+                  095-678-5840
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 flex-shrink-0" />
                 <span className="text-secondary-foreground/80">
-                  hello@penthai.com
+                  penthai.pim@gmail.com
                 </span>
               </li>
             </ul>
@@ -113,8 +98,6 @@ const Footer = () => {
           <p>&copy; 2024 เป็นไทย สงวนลิขสิทธิ์</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
