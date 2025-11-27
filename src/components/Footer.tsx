@@ -6,10 +6,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-2xl font-bold mb-4">เป็นไทย</h3>
-            <p className="text-secondary-foreground/80 mb-4">
-              แหล่งรวมสินค้าไทยแท้คุณภาพสูง ส่งตรงจากช่างฝีมือไทยสู่มือคุณ
-            </p>
+            <h3 className="text-2xl font-bold mb-4">PENTHAI</h3>
+            <p className="text-secondary-foreground/80 mb-4">แหล่งรวมสินค้าไทยแท้คุณภาพสูง ส่งตรงจากชุมชนไทยสู่มือคุณ</p>
             <div className="flex gap-3">
               <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                 <Facebook className="h-5 w-5" />
