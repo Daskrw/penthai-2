@@ -187,13 +187,19 @@ const Checkout = () => {
 
       // Deduct stock for each item
       for (const item of items) {
-        const { error: stockError } = await supabase.rpc('deduct_product_stock', {
-          p_product_id: item.product_id,
-          p_quantity: item.quantity
-        });
+        // Get current stock
+        const { data: product } = await supabase
+          .from("products")
+          .select("stock")
+          .eq("id", item.product_id)
+          .single();
         
-        if (stockError) {
-          console.error("Error deducting stock:", stockError);
+        if (product) {
+          const newStock = Math.max(0, product.stock - item.quantity);
+          await supabase
+            .from("products")
+            .update({ stock: newStock })
+            .eq("id", item.product_id);
         }
       }
 
