@@ -45,7 +45,7 @@ const Navbar = () => {
             <Link to="/shop" className="text-foreground hover:text-primary transition-colors">
               Shop
             </Link>
-            <Link to="/categories" className="text-foreground hover:text-primary transition-colors">
+            <Link to="/shop" className="text-foreground hover:text-primary transition-colors">
               Categories
             </Link>
             <Link to="/about" className="text-foreground hover:text-primary transition-colors">
@@ -135,7 +135,7 @@ const Navbar = () => {
                 Shop
               </Link>
               <Link
-                to="/categories"
+                to="/shop"
                 className="text-foreground hover:text-primary transition-colors py-2"
                 onClick={toggleMenu}
               >
