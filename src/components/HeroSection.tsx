@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroBanner from "@/assets/hero-banner.jpg";
+import heroBanner from "@/assets/hero-banner.png";
 const HeroSection = () => {
   return <section className="relative h-[600px] md:h-[700px] overflow-hidden">
       {/* Background Image with Overlay */}
