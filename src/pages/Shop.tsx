@@ -15,6 +15,7 @@ interface Product {
   image_url: string;
   category: string;
   product_type: 'consumer' | 'consumable';
+  stock: number;
 }
 
 const Shop = () => {
@@ -188,6 +189,7 @@ const Shop = () => {
                       image={product.image_url || "/placeholder.svg"}
                       rating={4.5}
                       reviews={0}
+                      stock={product.stock}
                     />
                   ))}
                 </div>

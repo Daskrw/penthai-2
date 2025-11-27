@@ -11,6 +11,7 @@ interface CartItem {
     name: string;
     price: number;
     image_url: string;
+    stock: number;
   };
 }
 
@@ -18,7 +19,7 @@ interface CartContextType {
   items: CartItem[];
   addToCart: (productId: string) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
-  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
+  updateQuantity: (itemId: string, quantity: number, productId?: string) => Promise<void>;
   clearCart: () => Promise<void>;
   cartTotal: number;
   cartCount: number;
@@ -72,7 +73,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             products (
               name,
               price,
-              image_url
+              image_url,
+              stock
             )
           `)
           .eq("cart_id", cart.id);
@@ -119,6 +121,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (cart) {
+        // Check product stock first
+        const { data: product } = await supabase
+          .from("products")
+          .select("stock, name")
+          .eq("id", productId)
+          .single();
+
+        if (!product || product.stock <= 0) {
+          toast({
+            title: "สินค้าหมด",
+            description: "Sorry, this item is out of stock",
+            variant: "destructive"
+          });
+          return;
+        }
+
         // Check if item already exists
         const { data: existingItem } = await supabase
           .from("cart_items")
@@ -128,6 +146,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           .maybeSingle();
 
         if (existingItem) {
+          // Check if adding one more exceeds stock
+          if (existingItem.quantity >= product.stock) {
+            toast({
+              title: "Stock limit reached",
+              description: `Only ${product.stock} items available`,
+              variant: "destructive"
+            });
+            return;
+          }
           // Update quantity
           await supabase
             .from("cart_items")
@@ -182,13 +209,31 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateQuantity = async (itemId: string, quantity: number) => {
+  const updateQuantity = async (itemId: string, quantity: number, productId?: string) => {
     if (quantity <= 0) {
       await removeFromCart(itemId);
       return;
     }
 
     try {
+      // Check stock limit if productId provided
+      if (productId) {
+        const { data: product } = await supabase
+          .from("products")
+          .select("stock")
+          .eq("id", productId)
+          .single();
+
+        if (product && quantity > product.stock) {
+          toast({
+            title: "Stock limit reached",
+            description: `Only ${product.stock} items available`,
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+
       await supabase
         .from("cart_items")
         .update({ quantity })
