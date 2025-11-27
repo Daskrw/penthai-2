@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,19 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { generatePromptPayPayload, PROMPTPAY_PHONE } from "@/lib/promptpay";
-import { Clock, QrCode, Smartphone, ArrowLeft, ArrowRight, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
+import { Clock, QrCode, ArrowLeft, ArrowRight, RefreshCw, CheckCircle, AlertCircle, Upload, ImageIcon } from "lucide-react";
 
 const SHIPPING_FEE = 50;
 const PAYMENT_TIMEOUT = 15 * 60; // 15 minutes in seconds
 
 type Step = "address" | "payment";
-type PaymentMethod = "promptpay" | "kbank";
 
 interface AddressForm {
   name: string;
@@ -34,7 +32,6 @@ const Checkout = () => {
   const { items, cartTotal, clearCart } = useCart();
   
   const [step, setStep] = useState<Step>("address");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("promptpay");
   const [addressForm, setAddressForm] = useState<AddressForm>({
     name: "",
     phone: "",
@@ -43,6 +40,9 @@ const Checkout = () => {
   const [timeRemaining, setTimeRemaining] = useState(PAYMENT_TIMEOUT);
   const [isExpired, setIsExpired] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [slipFile, setSlipFile] = useState<File | null>(null);
+  const [slipPreview, setSlipPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const grandTotal = cartTotal + SHIPPING_FEE;
 
@@ -90,29 +90,79 @@ const Checkout = () => {
     setIsExpired(false);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        toast({
+          title: "Invalid file",
+          description: "Please upload an image file (JPG, PNG, etc.)",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please upload an image smaller than 5MB",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setSlipFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSlipPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleConfirmPayment = async () => {
-    if (!user) return;
+    if (!user || !slipFile) return;
     
     setIsProcessing(true);
     
     try {
+      // Upload slip to Supabase Storage
+      const fileExt = slipFile.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from("payment-slips")
+        .upload(fileName, slipFile);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from("payment-slips")
+        .getPublicUrl(fileName);
+
       // Generate order number
       const orderNumber = `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(Math.random() * 10000).toString().padStart(4, "0")}`;
       
-      // Create order
+      // Create order with pending_verification status
       const { data: order, error: orderError } = await supabase
         .from("orders")
         .insert({
           user_id: user.id,
           order_number: orderNumber,
-          status: "paid",
-          payment_method: paymentMethod,
+          status: "pending",
+          payment_method: "promptpay",
           subtotal: cartTotal,
           shipping_fee: SHIPPING_FEE,
           total: grandTotal,
           customer_name: addressForm.name,
           customer_phone: addressForm.phone,
           shipping_address: addressForm.address,
+          payment_slip_url: publicUrl,
           paid_at: new Date().toISOString()
         })
         .select("id")
@@ -150,19 +200,6 @@ const Checkout = () => {
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  const openKBankApp = () => {
-    // Try to open K PLUS app
-    window.location.href = "kplus://";
-    
-    // Fallback message after a delay
-    setTimeout(() => {
-      toast({
-        title: "K PLUS App",
-        description: "If the app didn't open, please scan the QR code or transfer manually",
-      });
-    }, 2000);
   };
 
   // Generate PromptPay QR payload
@@ -268,8 +305,11 @@ const Checkout = () => {
               ) : (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Payment Method</CardTitle>
-                    <CardDescription>Choose your preferred payment method</CardDescription>
+                    <CardTitle className="flex items-center gap-2">
+                      <QrCode className="h-5 w-5 text-primary" />
+                      QR Payment / PromptPay
+                    </CardTitle>
+                    <CardDescription>Scan QR code with any banking app</CardDescription>
                     
                     {/* Countdown Timer */}
                     <div className={`flex items-center gap-2 mt-4 p-3 rounded-lg ${isExpired ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
@@ -297,72 +337,72 @@ const Checkout = () => {
                       </div>
                     ) : (
                       <>
-                        <RadioGroup value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as PaymentMethod)}>
-                          <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-accent">
-                            <RadioGroupItem value="promptpay" id="promptpay" />
-                            <Label htmlFor="promptpay" className="flex items-center gap-2 cursor-pointer flex-1">
-                              <QrCode className="h-5 w-5 text-primary" />
-                              <div>
-                                <p className="font-medium">QR Payment / PromptPay</p>
-                                <p className="text-sm text-muted-foreground">Scan QR code with any banking app</p>
-                              </div>
-                            </Label>
+                        {/* QR Code */}
+                        <div className="text-center space-y-4">
+                          <h3 className="font-semibold">Scan QR Code to Pay</h3>
+                          <div className="inline-block p-4 bg-white rounded-lg shadow-lg">
+                            <QRCodeSVG 
+                              value={promptPayPayload} 
+                              size={200}
+                              level="M"
+                            />
                           </div>
-                          <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-accent">
-                            <RadioGroupItem value="kbank" id="kbank" />
-                            <Label htmlFor="kbank" className="flex items-center gap-2 cursor-pointer flex-1">
-                              <Smartphone className="h-5 w-5 text-green-600" />
-                              <div>
-                                <p className="font-medium">Mobile Banking (KBank)</p>
-                                <p className="text-sm text-muted-foreground">Open K PLUS app directly</p>
-                              </div>
-                            </Label>
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">PromptPay: {PROMPTPAY_PHONE}</p>
+                            <p className="text-lg font-bold text-primary">฿{grandTotal.toLocaleString()}</p>
                           </div>
-                        </RadioGroup>
+                        </div>
 
-                        {/* Payment Details */}
                         <Separator />
 
-                        {paymentMethod === "promptpay" && (
-                          <div className="text-center space-y-4">
-                            <h3 className="font-semibold">Scan QR Code to Pay</h3>
-                            <div className="inline-block p-4 bg-white rounded-lg shadow-lg">
-                              <QRCodeSVG 
-                                value={promptPayPayload} 
-                                size={200}
-                                level="M"
+                        {/* Slip Upload */}
+                        <div className="space-y-3">
+                          <Label className="text-base font-semibold">
+                            แนบหลักฐานการโอนเงิน (Upload Slip) *
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            กรุณาแนบสลิปการโอนเงินเพื่อยืนยันการชำระเงิน
+                          </p>
+                          
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                          
+                          {slipPreview ? (
+                            <div className="relative">
+                              <img
+                                src={slipPreview}
+                                alt="Payment slip preview"
+                                className="max-h-64 mx-auto rounded-lg border shadow-sm"
                               />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="mt-3 w-full"
+                                onClick={() => fileInputRef.current?.click()}
+                              >
+                                <Upload className="h-4 w-4 mr-2" />
+                                Change Image
+                              </Button>
                             </div>
-                            <div className="space-y-1">
-                              <p className="text-sm text-muted-foreground">PromptPay: {PROMPTPAY_PHONE}</p>
-                              <p className="text-lg font-bold text-primary">฿{grandTotal.toLocaleString()}</p>
-                            </div>
-                          </div>
-                        )}
-
-                        {paymentMethod === "kbank" && (
-                          <div className="text-center space-y-4">
-                            <h3 className="font-semibold">KBank Mobile Banking</h3>
-                            <Button 
-                              size="lg" 
-                              className="bg-green-600 hover:bg-green-700"
-                              onClick={openKBankApp}
+                          ) : (
+                            <div
+                              onClick={() => fileInputRef.current?.click()}
+                              className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 hover:bg-accent/50 transition-colors"
                             >
-                              <Smartphone className="h-5 w-5 mr-2" />
-                              Open K PLUS App
-                            </Button>
-                            <p className="text-sm text-muted-foreground">
-                              Or scan the QR code above with K PLUS
-                            </p>
-                            <div className="inline-block p-4 bg-white rounded-lg shadow-lg">
-                              <QRCodeSVG 
-                                value={promptPayPayload} 
-                                size={150}
-                                level="M"
-                              />
+                              <ImageIcon className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+                              <p className="font-medium">Click to upload payment slip</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                Supports JPG, PNG (max 5MB)
+                              </p>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </>
                     )}
                   </CardContent>
@@ -374,7 +414,7 @@ const Checkout = () => {
                       </Button>
                       <Button 
                         onClick={handleConfirmPayment}
-                        disabled={isProcessing}
+                        disabled={isProcessing || !slipFile}
                         className="bg-green-600 hover:bg-green-700"
                       >
                         {isProcessing ? (
@@ -433,11 +473,13 @@ const Checkout = () => {
                       <span className="text-muted-foreground">Shipping</span>
                       <span>฿{SHIPPING_FEE.toLocaleString()}</span>
                     </div>
-                    <Separator />
-                    <div className="flex justify-between font-bold text-lg">
-                      <span>Total</span>
-                      <span className="text-primary">฿{grandTotal.toLocaleString()}</span>
-                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex justify-between font-semibold text-lg">
+                    <span>Total</span>
+                    <span className="text-primary">฿{grandTotal.toLocaleString()}</span>
                   </div>
                 </CardContent>
               </Card>
