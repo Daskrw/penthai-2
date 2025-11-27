@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Handshake } from "lucide-react";
-
 const CallToAction = () => {
-  return (
-    <section className="py-20 bg-primary text-primary-foreground">
+  return <section className="py-20 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -16,16 +14,12 @@ const CallToAction = () => {
           </h2>
           
           <p className="text-lg mb-8 opacity-90">
-            หากคุณเป็นช่างฝีมือ ผู้ผลิตสินค้าท้องถิ่น หรือต้องการสนับสนุนโครงการของเรา
-            เราพร้อมรับฟังและร่วมมือกับคุณเพื่อส่งเสริมสินค้าไทยสู่ตลาดที่กว้างขึ้น
+            คุณก็เป็นส่วนหนึ่งของการเปลี่ยนแปลงได้
+
+
           </p>
           
-          <Button
-            asChild
-            size="lg"
-            variant="secondary"
-            className="bg-white text-primary hover:bg-white/90"
-          >
+          <Button asChild size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
             <Link to="/contact">
               ติดต่อเรา
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -33,8 +27,6 @@ const CallToAction = () => {
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CallToAction;
